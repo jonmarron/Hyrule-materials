@@ -4,9 +4,6 @@
 
 body {
   margin:0;padding:0;
-  background-image: url('./assets/805656.jpg');
-  background-position: center;
-  background-size: cover;
   height: 100vh;
   display:flex;
   flex-direction: column;
@@ -17,12 +14,21 @@ body {
 
 #root {
   /* max-width: 1280px; */
-  width: 80%;
+  background-image: url('./assets/805656.jpg');
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  width: 100%;
   padding: 2rem;
+}
+.App {
   display:flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+
 }
+
 #site-name {
   text-align: center;
   text-transform: uppercase;
@@ -39,8 +45,11 @@ body {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  width: 80%;
+  margin: 0;
 }
 .materialCard {
+  position: relative;
   width: 30%;
   background-color: #ffffff30;
   backdrop-filter: blur(10px);
@@ -52,6 +61,28 @@ body {
   margin: 10px;
   border-radius: 20px;
 }
+
+.fav-btn {
+  position: absolute;
+  top:0;
+  right: 0;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: transparent;
+  cursor: pointer;
+  transition: .2s ease-in-out;
+  margin: 0;
+}
+
+.fav-btn:hover {
+  background: #ffffff40;
+  border: none;
+}
+
 .materialCard img {
   height: 140px;
   width: 140px;
