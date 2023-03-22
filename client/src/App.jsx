@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { constantsGeneral } from './constants/constatsGeneral'
@@ -13,43 +13,49 @@ const getMaterials = async (setMaterials) => {
 function App() {
   const [materials, setMaterials] = useState([]);
   const [favMaterials, setFavMaterials] = useState(null)
-  const [sortAscending, setSortAscending] = useState(null);
+  const [isSortedAscending, setIsSortedAscending] = useState(true);
   const [hideSort, setHideSort] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // is there a better way to do this? 👇 (( probably yes 😅))
   const [learnMoreCounter, setLearnMoreCounter] = useState(0);
+
+  const clickLearnMore = () => {
+    setHideSort(true);
+    setLearnMoreCounter(learnMoreCounter + 1)
+  }
+  const clickLearnLess = () => {
+    setLearnMoreCounter(learnMoreCounter - 1)
+    if(learnMoreCounter === 1 ) setHideSort(false);
+  }
 
   useEffect(() => {
     getMaterials(setMaterials);
 
-    // 👇 this throws an error saying that 'materials' is not iterable, what leads me to believe that the materials are not really set yet...
-    const sortedMaterials = [...materials].sort((a, b) => {
-      return a.name.localeCompare(b.name);
-    })
-    console.log(sortedMaterials)
-    setMaterials(sortedMaterials);
   }, [])
-
-  useEffect(() => {
-
-    // I want the materials to be sorted ascending since the beginning. It only works if I set "materials" as a dependency of this useEffect, but that means it re-renders everytime and it is an infinte loop, how do i do this better without repeating this funtcion when setting the materials first after fetching
-    if (materials && sortAscending) {
-      const sortedMaterials = [...materials].sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      })
-      setMaterials(sortedMaterials);
-    } else if (materials && !sortAscending) {
-      const sortedMaterials = [...materials].sort((a, b) => {
-        return b.name.localeCompare(a.name);
-      })
-      setMaterials(sortedMaterials);
-    }
-  }, [sortAscending])
 
   const handleSearch = event => {
     setSearchQuery(event.target.value);
   }
+
+  // const sortedMaterials= [...materials].sort((a, b) => {
+  //   if (sortAscending) {
+  //     return a.name.localeCompare(b.name);
+  //   } else {
+  //     return b.name.localeCompare(a.name);
+  //   }
+  // })
+
+  const sortedMaterials = useMemo(() => {
+    const sorted = [...materials].sort((a, b) => {
+        if (isSortedAscending) {
+          return a.name.localeCompare(b.name);
+        } else {
+          return b.name.localeCompare(a.name);
+        }
+      })
+      return sorted;
+
+  },[materials, isSortedAscending] )
 
   return (
     <div className="App">
@@ -60,24 +66,21 @@ function App() {
           <></>
         ) : (
           <>
-            <button onClick={e => setSortAscending(true)}>Sort Ascending</button>
-            <button onClick={e => setSortAscending(false)}>Sort Descending</button>
+            <button onClick={e => setIsSortedAscending(true)}>Sort Ascending</button>
+            <button onClick={e => setIsSortedAscending(false)}>Sort Descending</button>
           </>
         )}
       </div>
       <div id="cards-container">
 
-        {materials.filter(material => material.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        {sortedMaterials.filter(material => material.name.toLowerCase().includes(searchQuery.toLowerCase()))
           .map((material, index) => {
             return (
               <MaterialCard
                 key={index}
-                name={material.name}
-                image={material.image}
-                description={material.description}
-                setHideSort={setHideSort}
-                setLearnMoreCounter={setLearnMoreCounter}
-                learnMoreCounter={learnMoreCounter}
+                material={material}
+                // onClickMore = { clickLearnMore }
+                // onClickLess = { clickLearnLess }
               />
             )
           })}
