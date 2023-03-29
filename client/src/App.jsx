@@ -1,8 +1,9 @@
 import { useEffect, useState, useMemo } from 'react'
-import viteLogo from '/vite.svg'
+import {Link, Route, Routes} from 'react-router-dom'
 import './App.css'
 import { constantsGeneral } from './constants/constatsGeneral'
-import { MaterialCard } from './components/MaterialCard'
+import BrowseMaterials from './components/BrowseMaterials'
+import FavMaterials from './components/FavMaterials'
 
 const getMaterials = async (setMaterials) => {
   const response = await fetch(constantsGeneral.apiConstants.hyruleBaseURL + constantsGeneral.apiConstants.catMaterials);
@@ -12,80 +13,27 @@ const getMaterials = async (setMaterials) => {
 
 function App() {
   const [materials, setMaterials] = useState([]);
-  const [favMaterials, setFavMaterials] = useState(null)
-  const [isSortedAscending, setIsSortedAscending] = useState(true);
-  const [hideSort, setHideSort] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const [learnMoreCounter, setLearnMoreCounter] = useState(0);
-
-  const clickLearnMore = () => {
-    setHideSort(true);
-    setLearnMoreCounter(learnMoreCounter + 1)
-  }
-  const clickLearnLess = () => {
-    setLearnMoreCounter(learnMoreCounter - 1)
-    if(learnMoreCounter === 1 ) setHideSort(false);
-  }
-
+  
   useEffect(() => {
     getMaterials(setMaterials);
-
   }, [])
 
-  const handleSearch = event => {
-    setSearchQuery(event.target.value);
-  }
-
-  // const sortedMaterials= [...materials].sort((a, b) => {
-  //   if (sortAscending) {
-  //     return a.name.localeCompare(b.name);
-  //   } else {
-  //     return b.name.localeCompare(a.name);
-  //   }
-  // })
-
-  const sortedMaterials = useMemo(() => {
-    const sorted = [...materials].sort((a, b) => {
-        if (isSortedAscending) {
-          return a.name.localeCompare(b.name);
-        } else {
-          return b.name.localeCompare(a.name);
-        }
-      })
-      return sorted;
-
-  },[materials, isSortedAscending] )
-
   return (
-    <div className="App">
-      <h1 id="site-name">Hyrule Materials</h1>
-      <div id='filter-box'>
-        <input type="text" name="mat-search" placeholder='Search' onChange={handleSearch} />
-        {hideSort ? (
-          <></>
-        ) : (
-          <>
-            <button onClick={e => setIsSortedAscending(true)}>Sort Ascending</button>
-            <button onClick={e => setIsSortedAscending(false)}>Sort Descending</button>
-          </>
-        )}
-      </div>
-      <div id="cards-container">
+    <>
+      <nav>
+         <h2>Hyrule Materials</h2>
+        <ul>
+          <li><Link to="/">Browse</Link></li>
+          <li><Link to="/favourite-materials">Favourites</Link></li>
+        </ul>
+      </nav>
+      <Routes>
+        <Route path='/' element={<BrowseMaterials materials={materials} setMaterials={setMaterials} />}></Route>
+        <Route path='/favourite-materials' element={<FavMaterials/>}></Route>
 
-        {sortedMaterials.filter(material => material.name.toLowerCase().includes(searchQuery.toLowerCase()))
-          .map((material, index) => {
-            return (
-              <MaterialCard
-                key={index}
-                material={material}
-                // onClickMore = { clickLearnMore }
-                // onClickLess = { clickLearnLess }
-              />
-            )
-          })}
-      </div>
-    </div>
+      </Routes>
+    </>
+
   )
 }
 

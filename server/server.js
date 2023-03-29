@@ -1,33 +1,25 @@
+const mongoose = require('mongoose');
+const Material = require('./Model/Material.js')
+
 const express = require("express");
-const app = express();
-const fs = require("fs");
-const path = require("path");
-
-const filePath = './favMaterials.json';
-
-const PORT = 9000;
-
 const cors = require('cors');
+const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-let favMaterials = {favMaterials: []};
+const PORT = 9000;
 
-fs.access(filePath, fs.constants.F_OK, (err) => {
-  if(err){
-    fs.writeFileSync(filePath, JSON.stringify(favMaterials));
-  }
-  favMaterials = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-})
+mongoose.connect("mongodb+srv://jonmarron:mmKJucyyCBjcSNsl@cluster0.tfvjd7h.mongodb.net/test");
 
-app.get('/api/fav-materials', (req, res, next) => {
-  res.json(favMaterials)
+app.get('/api/fav-materials', async (req, res, next) => {
+  const list = await Material.find({});
+  res.json(list)
 }).post('/api/fav-materials', (req, res, next) => {
-  const material = req.body;
-  favMaterials.favMaterials.push(material);
-  fs.writeFileSync(filePath, JSON.stringify(favMaterials));
-  res.status(200).send('POST succesful');
+  const material = new Material(req.body);
+  material.save()
+  .then(material => res.json(material))
+  .catch(err =>res.status(400).json({success:false}));
 })
 
 app.listen(PORT, () => console.log(`App ist listenin on http://localhost:${PORT} \nfavs on ---> http://localhost:${PORT}/api/fav-materials`));

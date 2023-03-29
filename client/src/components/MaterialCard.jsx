@@ -15,7 +15,6 @@ export const MaterialCard = ({material, onClickMore, onClickLess}) => {
       body:JSON.stringify(material)
     })
     const data = await res.text();
-    console.log(data);
   }
 
   return (
