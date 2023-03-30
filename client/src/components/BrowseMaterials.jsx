@@ -1,16 +1,15 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { constantsGeneral } from '../constants/constatsGeneral'
 import { MaterialCard } from './MaterialCard'
 
-const getMaterials = async (setMaterials) => {
-  const response = await fetch(constantsGeneral.apiConstants.hyruleBaseURL + constantsGeneral.apiConstants.catMaterials);
-  const data = await response.json();
-  setMaterials(data.data);
-}
+// const getMaterials = async (setMaterials) => {
+//   const response = await fetch(constantsGeneral.apiConstants.hyruleBaseURL + constantsGeneral.apiConstants.catMaterials);
+//   const data = await response.json();
+//   setMaterials(data.data);
+// }
 
-function BrowseMaterials({materials, setMaterials}) {
+function BrowseMaterials({materials, setMaterials, getMaterials}) {
   
-  const [favMaterials, setFavMaterials] = useState(null)
   const [isSortedAscending, setIsSortedAscending] = useState(true);
   const [hideSort, setHideSort] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -26,9 +25,6 @@ function BrowseMaterials({materials, setMaterials}) {
     if(learnMoreCounter === 1 ) setHideSort(false);
   }
 
- 
-
-  console.log(materials)
   const handleSearch = event => {
     setSearchQuery(event.target.value);
   }
@@ -53,7 +49,6 @@ function BrowseMaterials({materials, setMaterials}) {
     
   },[materials, isSortedAscending] )
   
-  console.log(sortedMaterials)
   return (
     <div className="container">
       <div id='filter-box'>
@@ -75,6 +70,9 @@ function BrowseMaterials({materials, setMaterials}) {
               <MaterialCard
                 key={index}
                 material={material}
+                materials={materials}
+                setMaterials={setMaterials}
+                getMaterials={getMaterials}
                 // onClickMore = { clickLearnMore }
                 // onClickLess = { clickLearnLess }
               />

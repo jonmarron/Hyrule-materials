@@ -9,7 +9,8 @@ const materialSchema = new Schema({
   hearts_recovered: Number,
   id: Number,
   image: String,
-  name: String
+  name: String,
+  isFavourite: Boolean
 })
 
 const Material = model('Material', materialSchema);

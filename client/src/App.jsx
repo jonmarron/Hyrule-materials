@@ -1,14 +1,14 @@
-import { useEffect, useState, useMemo } from 'react'
+import {useEffect, useState, useMemo} from 'react'
 import {Link, Route, Routes} from 'react-router-dom'
 import './App.css'
-import { constantsGeneral } from './constants/constatsGeneral'
+import {constantsGeneral} from './constants/constatsGeneral'
 import BrowseMaterials from './components/BrowseMaterials'
 import FavMaterials from './components/FavMaterials'
 
 const getMaterials = async (setMaterials) => {
-  const response = await fetch(constantsGeneral.apiConstants.hyruleBaseURL + constantsGeneral.apiConstants.catMaterials);
+  const response = await fetch(constantsGeneral.apiConstants.materialsURL);
   const data = await response.json();
-  setMaterials(data.data);
+  setMaterials(data);
 }
 
 function App() {
@@ -28,9 +28,8 @@ function App() {
         </ul>
       </nav>
       <Routes>
-        <Route path='/' element={<BrowseMaterials materials={materials} setMaterials={setMaterials} />}></Route>
-        <Route path='/favourite-materials' element={<FavMaterials/>}></Route>
-
+        <Route path='/' element={<BrowseMaterials materials={materials} setMaterials={setMaterials} getMaterials={getMaterials}/>}/>
+        <Route path='/favourite-materials' element={<FavMaterials/>}materials={materials} setMaterials={setMaterials} getMaterials={getMaterials} />
       </Routes>
     </>
 
