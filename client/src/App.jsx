@@ -29,7 +29,7 @@ function App() {
       </nav>
       <Routes>
         <Route path='/' element={<BrowseMaterials materials={materials} setMaterials={setMaterials} getMaterials={getMaterials}/>}/>
-        <Route path='/favourite-materials' element={<FavMaterials/>}materials={materials} setMaterials={setMaterials} getMaterials={getMaterials} />
+        <Route path='/favourite-materials' element={<FavMaterials materials={materials} setMaterials={setMaterials} getMaterials={getMaterials} />}/>
       </Routes>
     </>
 

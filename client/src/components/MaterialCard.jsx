@@ -24,7 +24,11 @@ export const MaterialCard = ({ material, onClickMore, onClickLess, getMaterials,
 
   return (
     <div className='materialCard'>
-      <button className="fav-btn" onClick={handleClick}>{isFavourite ? ('-') : ('+')}</button>
+      {isFavourite?(
+        <button className="fav-btn remove-fav" onClick={handleClick}>-</button>
+      ):(
+        <button className="fav-btn" onClick={handleClick}>+</button>
+      )}
       <img src={image} className='materialCardImage' />
       <p className="material-name">{name}</p>
       {showInfo ? (
